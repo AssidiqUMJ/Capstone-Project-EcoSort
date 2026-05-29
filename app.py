@@ -1,133 +1,69 @@
 from flask import Flask, request, jsonify
-
 import tensorflow as tf
 import numpy as np
-
 from PIL import Image
-
-# =========================================
-# INIT FLASK
-# =========================================
 
 app = Flask(__name__)
 
-# =========================================
-# LOAD SAVED MODEL
-# =========================================
-
-loaded_model = tf.saved_model.load(
-    'model/ecosort_savedmodel'
+model = tf.saved_model.load(
+    "model/ecosort_savedmodel"
 )
 
-infer = loaded_model.signatures["serving_default"]
-
-# =========================================
-# CLASS LABELS
-# =========================================
+infer = model.signatures["serving_default"]
 
 class_names = [
-
     "organik",
     "anorganik",
     "B3"
-   
 ]
 
-# =========================================
-# PREPROCESS IMAGE
-# =========================================
-
-def preprocess_image(image):
-
-    image = image.resize((224,224))
-
-    image = np.array(image)
-
-    image = image / 255.0
-
-    image = np.expand_dims(image, axis=0)
-
-    return image.astype(np.float32)
-
-# =========================================
-# HOME ROUTE
-# =========================================
-
-@app.route('/')
+@app.route("/")
 def home():
+    return {"message": "Ecosort API Running"}
 
-    return jsonify({
-
-        "message": "Ecosort Flask API Running"
-    })
-
-# =========================================
-# PREDICT ROUTE
-# =========================================
-
-@app.route('/predict', methods=['POST'])
+@app.route("/predict", methods=["POST"])
 def predict():
 
-    # Check file
-    if 'file' not in request.files:
+    file = request.files["file"]
 
-        return jsonify({
+    img = Image.open(file).convert("RGB")
 
-            "error": "No file uploaded"
-        })
+    img = img.resize((224,224))
 
-    file = request.files['file']
+    img = np.array(img)/255.0
 
-    # Open image
-    image = Image.open(file).convert("RGB")
+    img = np.expand_dims(img, axis=0)
 
-    # Preprocess
-    processed_image = preprocess_image(image)
-
-    # Convert tensor
-    input_tensor = tf.convert_to_tensor(
-        processed_image,
+    tensor = tf.convert_to_tensor(
+        img,
         dtype=tf.float32
     )
 
-    # Prediction
-    prediction = infer(input_tensor)
+    prediction = infer(tensor)
 
-    prediction_values = list(
-        prediction.values()
-    )[0].numpy()
+    output_key = list(
+        prediction.keys()
+    )[0]
 
-    predicted_index = np.argmax(
-        prediction_values
-    )
+    probs = prediction[
+        output_key
+    ].numpy()[0]
 
-    confidence = float(
-        np.max(prediction_values)
-    )
+    pred_idx = np.argmax(probs)
 
-    predicted_class = class_names[
-        predicted_index
-    ]
-
-    # Return response
     return jsonify({
 
-        "prediction": predicted_class,
+        "prediction":
+        class_names[pred_idx],
 
-        "confidence": round(confidence * 100, 2)
+        "confidence":
+        float(probs[pred_idx])
+
     })
 
-# =========================================
-# RUN SERVER
-# =========================================
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     app.run(
-
-        host='0.0.0.0',
-
-        port=5000,
-
-        debug=True
+        host="0.0.0.0",
+        port=7860
     )
