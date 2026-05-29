@@ -16,7 +16,7 @@ app = Flask(__name__)
 # =========================================
 
 loaded_model = tf.saved_model.load(
-    'model/savedmodel'
+    'model/ecosort_savedmodel'
 )
 
 infer = loaded_model.signatures["serving_default"]
