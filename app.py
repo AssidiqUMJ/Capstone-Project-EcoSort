@@ -16,7 +16,7 @@ app = Flask(__name__)
 # =========================================
 
 loaded_model = tf.saved_model.load(
-    'model/ecosort_savedmodel'
+    'model/savedmodel'
 )
 
 infer = loaded_model.signatures["serving_default"]
@@ -27,15 +27,10 @@ infer = loaded_model.signatures["serving_default"]
 
 class_names = [
 
-    "cardboard",
-    "glass",
-    "metal",
-    "paper",
-    "plastic",
-    "trash",
-    "organic",
-    "battery",
-    "clothes"
+    "organik",
+    "anorganik",
+    "B3"
+   
 ]
 
 # =========================================
