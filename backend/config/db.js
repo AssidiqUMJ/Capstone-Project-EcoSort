@@ -29,7 +29,7 @@ const initDB = async () => {
       )
     `);
     
-    console.log(`Database MySQL [${dbName}] terhubung & Tabel siap! 🚀`);
+    console.log(`Database MySQL terhubung & Tabel siap! 🚀`);
   } catch (error) {
     console.error('Gagal inisialisasi database:', error);
   }

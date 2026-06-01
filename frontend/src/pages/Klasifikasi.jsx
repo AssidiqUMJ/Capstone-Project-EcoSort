@@ -10,12 +10,12 @@ const Klasifikasi = () => {
   
   const fileInputRef = useRef(null);
 
-  // --- LOGIC UNTUK UPLOAD GAMBAR ---
+  // LOGIC UNTUK UPLOAD GAMBAR 
   const handleFileChange = (file) => {
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
       setImage(file);
       setPreview(URL.createObjectURL(file));
-      setResult(null); // Reset hasil kalau user upload foto baru
+      setResult(null); 
     } else {
       alert('Tolong upload file gambar (JPG/PNG) ya!');
     }
@@ -36,14 +36,14 @@ const Klasifikasi = () => {
     }
   };
 
-  // --- LOGIC PREDIKSI ASLI (FRONTEND KE BACKEND) ---
+  // LOGIC PREDIKSI ASLI (FRONTEND KE BACKEND) 
   const handlePredict = async () => {
     if (!image) return;
     
     setIsAnalyzing(true);
-    setResult(null); // Bersihkan hasil sebelumnya kalau ada
+    setResult(null); 
 
-    // Siapkan data foto pakai FormData (wajib kalau mau upload file via API)
+    // Siapkan data foto pakai FormData 
     const formData = new FormData();
     formData.append('image', image);
 
@@ -62,7 +62,6 @@ const Klasifikasi = () => {
       console.error("Gagal klasifikasi:", error);
       alert("Waduh, gagal menghubungi server! Pastikan terminal Backend (port 5000) lagi jalan.");
     } finally {
-      // Matikan animasi loading apapun hasilnya
       setIsAnalyzing(false); 
     }
   };
@@ -91,7 +90,6 @@ const Klasifikasi = () => {
             onDrop={onDrop}
             onClick={() => !preview && fileInputRef.current.click()}
           >
-            {/* Kalau Belum Ada Gambar */}
             {!preview && (
               <>
                 <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4 text-emerald-600">
@@ -104,7 +102,6 @@ const Klasifikasi = () => {
               </>
             )}
 
-            {/* Kalau Gambar Sudah Diupload */}
             {preview && (
               <div className="relative w-full rounded-2xl overflow-hidden group">
                 <img src={preview} alt="Preview" className="w-full h-auto max-h-[400px] object-contain bg-black/5" />
@@ -126,12 +123,12 @@ const Klasifikasi = () => {
             disabled={!image || isAnalyzing}
             className={`flex items-center px-8 py-3 rounded-xl font-semibold transition-all w-full justify-center border-2 ${
               !image 
-                ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed' // Saat kosong
+                ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed' 
                 : isAnalyzing 
-                  ? 'border-emerald-200 text-emerald-600 bg-emerald-50 cursor-wait' // Saat loading
+                  ? 'border-emerald-200 text-emerald-600 bg-emerald-50 cursor-wait' 
                   : result 
-                    ? 'border-gray-200 text-gray-600 bg-white hover:bg-gray-50 hover:border-gray-300' // Saat "Prediksi Ulang" (putih)
-                    : 'border-emerald-800 text-white bg-emerald-800 hover:bg-emerald-900 shadow-md' // Saat "Mulai Prediksi" (hijau tebal)
+                    ? 'border-gray-200 text-gray-600 bg-white hover:bg-gray-50 hover:border-gray-300' 
+                    : 'border-emerald-800 text-white bg-emerald-800 hover:bg-emerald-900 shadow-md' 
             }`}
           >
             {isAnalyzing ? (

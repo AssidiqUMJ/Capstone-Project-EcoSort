@@ -55,12 +55,10 @@ const Edukasi = () => {
       {/* SECTION 2: STATISTIK DAMPAK */}
       <div className="w-full">
         <div className="bg-emerald-800 rounded-3xl p-10 md:p-14 text-white relative overflow-hidden shadow-lg flex flex-col justify-center">
-          {/* Efek Cahaya di Background */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-700 rounded-full blur-3xl opacity-50 transform translate-x-1/3 -translate-y-1/3"></div>
           
           <div className="relative z-10">
             <p className="text-emerald-200 text-sm font-bold tracking-wider mb-2 uppercase">Dampak Komunitas</p>
-            {/* Render angka total dari database */}
             <h2 className="text-7xl font-bold mb-4">{stats.totalScan}</h2>
             <h3 className="text-2xl font-semibold mb-3">Total Sampah Terklasifikasi</h3>
             <p className="text-emerald-100 max-w-3xl text-sm md:text-base leading-relaxed">
@@ -77,14 +75,12 @@ const Edukasi = () => {
             <h2 className="text-2xl font-bold text-gray-900">Artikel Pilihan</h2>
             <p className="text-gray-500 text-sm mt-1">Pengetahuan ahli yang disesuaikan untuk dampak sehari-hari.</p>
           </div>
-          {/* LINK EXTERNAL: LIHAT SEMUA MODUL */}
           <a href="https://waste4change.com/blog/" target="_blank" rel="noopener noreferrer" className="text-emerald-700 font-semibold text-sm hover:text-emerald-900 flex items-center">
             Lihat semua modul <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
           </a>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* LINK EXTERNAL: ARTIKEL 1 (ORGANIK) */}
           <a href="https://waste4change.com/blog/pengertian-sampah-organik-contoh-gambar-manfaat/" target="_blank" rel="noopener noreferrer" className="block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
             <div className="h-56 bg-slate-100 relative overflow-hidden">
               <img 
@@ -104,7 +100,6 @@ const Edukasi = () => {
             </div>
           </a>
 
-          {/* LINK EXTERNAL: ARTIKEL 2 (ANORGANIK) */}
           <a href="https://waste4change.com/blog/contoh-sampah-anorganik-pengertian-jenis-manfaat/" target="_blank" rel="noopener noreferrer" className="block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
             <div className="h-56 bg-slate-100 relative overflow-hidden">
               <img 

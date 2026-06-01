@@ -22,7 +22,7 @@ function App() {
           </Routes>
         </div>
 
-        <Footer /> {/* Footer dipanggil di sini */}
+        <Footer /> 
       </div>
     </Router>
   );

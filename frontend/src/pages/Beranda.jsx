@@ -4,7 +4,7 @@ import botolImage from '../assets/botol-ai.jpg';
 const Beranda = () => {
   return (
     <div className="bg-white">
-      {/* SECTION 1: HERO BANNER (Yang tadi udah kita buat) */}
+      {/* SECTION 1: HERO BANNER */}
       <main className="max-w-7xl mx-auto px-10 pt-20 pb-24 flex flex-col md:flex-row items-center justify-between gap-12">
         <div className="flex-1 space-y-6">
           <h1 className="text-4xl md:text-5xl font-bold text-emerald-900 leading-tight">
@@ -90,24 +90,22 @@ const Beranda = () => {
               step :"2",   
               title: "AI Mengklasifikasi", 
               desc: "Model CNN kami memproses gambar dalam hitungan detik untuk mengidentifikasi objek dan menentukan persentase keyakinan.",
-              icon: "M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m14-6h2m-2 6h2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" // Ikon Microchip/AI
+              icon: "M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m14-6h2m-2 6h2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" 
             },
             { 
               step :"3",   
               title: "Belajar & Bertindak", 
               desc: "Dapatkan hasil klasifikasi beserta instruksi pembuangan yang tepat dan artikel edukasi terkait jenis sampah tersebut.",
-              icon: "M13 10V3L4 14h7v7l9-11h-7z" // Ikon Petir/Aksi Cepat
+              icon: "M13 10V3L4 14h7v7l9-11h-7z" 
             }
           ].map((item, index) => (
             <div key={index} className="bg-emerald-100/40 p-8 rounded-2xl border border-emerald-100 relative overflow-hidden group hover:bg-emerald-100/80 transition-all duration-300 shadow-sm hover:shadow-md">
               
-              {/* Nomer Background */}
                <div className="absolute -top-0 -right-0 text-7xl font-black text-emerald-600 opacity-10 select-none group-hover:scale-100 transition-transform duration-500">
                 {item.step}
               </div>
               
               <div className="relative z-10">
-                {/* Ikon Box */}
                 <div className="w-12 h-12 bg-white text-emerald-600 rounded-xl flex items-center justify-center mb-6 shadow-sm border border-emerald-50">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />

@@ -10,7 +10,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Inisiasi Gemini SDK (Akan error kalau API Key belum valid, jadi kita try-catch nanti)
+// Inisiasi Gemini SDK
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'dummy-key' });
 
 // Middleware
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
   res.send('Backend EcoSort siap meluncur!');
 });
 
-// === ENDPOINT UTAMA KLASIFIKASI ===
+// ENDPOINT UTAMA KLASIFIKASI
 app.post('/api/classify', upload.single('image'), async (req, res) => {
   try {
     // 1. Cek apakah ada gambar dari React
@@ -35,9 +35,7 @@ app.post('/api/classify', upload.single('image'), async (req, res) => {
 
     console.log('Gambar diterima dari Frontend, ukuran:', req.file.size, 'bytes');
 
-    /* ==========================================
-       2. MENGIRIM GAMBAR KE FLASK TIM AI
-       ========================================== */
+    // 2. MENGIRIM GAMBAR KE FLASK TIM AI
     let aiLabel = "";
     let aiAkurasi = "";
 
@@ -53,7 +51,7 @@ app.post('/api/classify', upload.single('image'), async (req, res) => {
       
       // Mengambil data sesuai format JSON dari tim AI (prediction & confidence)
       aiLabel = flaskResponse.data.prediction; 
-      // Karena confidence berbentuk angka (misal: 100), kita ubah jadi string dan tambah persen
+      // Karena confidence berbentuk angka (misal: 100), diubah jadi string dan tambah persen
       aiAkurasi = `${flaskResponse.data.confidence}%`; 
       
       console.log(`Berhasil! AI nebak ini: ${aiLabel} dengan akurasi ${aiAkurasi}`);
@@ -63,11 +61,9 @@ app.post('/api/classify', upload.single('image'), async (req, res) => {
       return res.status(500).json({ message: 'Gagal menghubungi API AI di Hugging Face' });
     }
 
-    /* ==========================================
-       3. MINTA EDUKASI & IDENTIFIKASI KE GEMINI (Multimodal)
-       ========================================== */
+    // 3. MINTA EDUKASI & IDENTIFIKASI KE GEMINI (Multimodal)
     let geminiTips = [];
-    let namaSpesifik = aiLabel; // Default pakai kategori dari Flask (Organik/Anorganik)
+    let namaSpesifik = aiLabel; 
     
     try {
       console.log(`Menghubungi Gemini untuk identifikasi gambar dan tips...`);
@@ -88,7 +84,7 @@ app.post('/api/classify', upload.single('image'), async (req, res) => {
       }`;
 
       if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'masukkan_api_key_gemini_lo_disini_nanti') {
-         // Kirim teks prompt SEKALIGUS file gambar ke Gemini
+         // Kirim teks prompt sekaligus file gambar ke Gemini
          const response = await ai.models.generateContent({
              model: 'gemini-2.5-flash',
              contents: [
@@ -124,12 +120,10 @@ app.post('/api/classify', upload.single('image'), async (req, res) => {
       ];
     }
 
-    /* ==========================================
-       4. GABUNGKAN DATA & KIRIM KE REACT
-       ========================================== */
+    // 4. GABUNGKAN DATA & KIRIM KE REACT
     const finalData = {
-      nama: namaSpesifik, // Sekarang pakai tebakan spesifik dari Gemini
-      kategori: aiLabel,  // Kategori besar tetep dari hasil CNN temen lo (Organik/Anorganik)
+      nama: namaSpesifik, 
+      kategori: aiLabel,  // Kategori besar tetep dari hasil CNN tim AI 
       akurasi: aiAkurasi,
       daurUlang: "Tinggi",
       deskripsi: "Klasifikasi kategori oleh CNN, identifikasi spesifik oleh Gemini AI.",
@@ -141,16 +135,13 @@ app.post('/api/classify', upload.single('image'), async (req, res) => {
       }))
     };
 
-    /* ==========================================
-       5. SIMPAN KE DATABASE MYSQL 
-       ========================================== */
+    // 5. SIMPAN KE DATABASE MYSQL
     try {
       const insertQuery = 'INSERT INTO histories (nama_sampah, kategori, akurasi) VALUES (?, ?, ?)';
       await db.execute(insertQuery, [finalData.nama, finalData.kategori, finalData.akurasi]);
       console.log('✅ Riwayat scan berhasil disimpan ke database!');
     } catch (dbError) {
       console.error('❌ Gagal menyimpan ke database:', dbError);
-      // Kita tetap lanjut mengirim response ke React meskipun DB gagal, biar UX gak terganggu
     }
 
     res.json(finalData);
@@ -165,22 +156,20 @@ app.listen(PORT, () => {
   console.log(`Server Backend EcoSort jalan di http://localhost:${PORT}`);
 });
 
-// === ENDPOINT STATISTIK UNTUK HALAMAN EDUKASI ===
+// ENDPOINT STATISTIK UNTUK HALAMAN EDUKASI 
 app.get('/api/stats', async (req, res) => {
   try {
-    // Menghitung total semua scan dan total khusus sampah Organik
+    // Menghitung total semua scan
     const query = `
       SELECT 
-        COUNT(*) AS total_scan,
-        SUM(CASE WHEN kategori = 'Organik' THEN 1 ELSE 0 END) AS total_organik
+        COUNT(*) AS total_scan
       FROM histories
     `;
     const [rows] = await db.execute(query);
     const data = rows[0];
 
     res.json({
-      totalScan: data.total_scan || 0,
-      totalOrganik: data.total_organik || 0
+      totalScan: data.total_scan || 0
     });
   } catch (error) {
     console.error('Gagal mengambil statistik:', error);
